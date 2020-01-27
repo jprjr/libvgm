@@ -81,6 +81,7 @@ option(BUILD_TESTS "build test programs" ON)
 option(BUILD_PLAYER "build player application" ON)
 option(BUILD_SHARED "build shared versions of libraries" ON)
 option(USE_SANITIZERS "use sanitizers" ON)
+option(BUILD_VGM2WAV "build c-based vgm2wav application" ON)
 
 add_subdirectory(utils)
 if(USE_SANITIZERS)
@@ -159,6 +160,15 @@ target_link_libraries(player PRIVATE vgm-audio vgm-player)
 if(USE_SANITIZERS)
     add_sanitizers(player)
 endif(USE_SANITIZERS)
+endif()
+
+if(BUILD_VGM2WAV)
+add_executable(vgm2wav vgm2wav.c player/dblk_compr.c)
+target_include_directories(vgm2wav PRIVATE ${PROJECT_SOURCE_DIR})
+target_link_libraries(vgm2wav PRIVATE vgm-player)
+if(USE_SANITIZERS)
+	add_sanitizers(vgm2wav)
+endif()
 endif()
 
 set(COMMON_HEADERS
