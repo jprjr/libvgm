@@ -316,7 +316,7 @@ UINT8 S98Player::LoadTags(void)
 		startPtr += 5;
 		if (endPtr - startPtr >= 3)
 		{
-			if (startPtr[0] == 0xEF && startPtr[1] == 0xBB && startPtr[2] == 0xBF)	// check for UTF-8 BOM
+			if ((UINT8)startPtr[0] == 0xEF && (UINT8)startPtr[1] == 0xBB && (UINT8)startPtr[2] == 0xBF)	// check for UTF-8 BOM
 			{
 				tagIsUTF8 = true;
 				startPtr += 3;
