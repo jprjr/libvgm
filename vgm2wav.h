@@ -202,12 +202,12 @@ static void pack_samples(UINT8 *d, unsigned int sample_count, WAVE_32BS *data) {
         if(data[i].L < -0x8000) {
             data[i].L = -0x8000;
         } else if(data[i].L > 0x7FFF) {
-            data[i].L = 0x7FFFF;
+            data[i].L = 0x7FFF;
         }
         if(data[i].R < -0x8000) {
             data[i].R = -0x8000;
         } else if(data[i].R > 0x7FFF) {
-            data[i].R = 0x7FFFF;
+            data[i].R = 0x7FFF;
         }
         pack_int16le(&d[ 0 ], (INT16)data[i].L);
         pack_int16le(&d[ sizeof(INT16) ], (INT16)data[i].R);
