@@ -89,18 +89,57 @@ int main(int argc, const char *argv[]) {
     unsigned int totalSamples;
     unsigned int fadeSamples;
     unsigned int curSamples;
+    unsigned int loops;
     const char *const *tags;
+    const char *f_input;
+    const char *f_output;
+    const char *self;
+    char *c;
+    const char *s;
     FILE *f;
     DATA_LOADER *loader;
     WAVE_32BS *buffer;
     UINT8 *packed;
 
-    if(argc < 3) {
-        fprintf(stderr,"Usage: %s /path/to/file /path/to/out.wav\n",argv[0]);
+    fadeSamples = 0;
+    loops = 0;
+
+    self = *argv++;
+    argc--;
+
+    while(argc > 0) {
+        if(str_equals(*argv,"--")) {
+            argv++;
+            argc--;
+            break;
+        }
+        else if(str_istarts(*argv,"--loops")) {
+            c = strchr(*argv,'=');
+            if(c != NULL) {
+                s = &c[1];
+            } else {
+                argv++;
+                argc--;
+                s = *argv;
+            }
+            loops = scan_uint(s);
+            if(loops == 0) {
+                loops = 2;
+            }
+            argv++;
+            argc--;
+        }
+        else {
+            break;
+        }
+    }
+
+    if(argc < 2) {
+        fprintf(stderr,"Usage: %s [--loops loopnum] /path/to/file /path/to/out.wav\n",self);
         return 1;
     }
 
-    fadeSamples = 0;
+
     buffer = (WAVE_32BS *)malloc(sizeof(WAVE_32BS) * BUFFER_LEN);
     if(buffer == NULL) {
         fprintf(stderr,"out of memory\n");
@@ -112,13 +151,13 @@ int main(int argc, const char *argv[]) {
         return 1;
     }
 
-    f = fopen(argv[2],"wb");
+    f = fopen(argv[1],"wb");
     if(f == NULL) {
         fprintf(stderr,"unable to open output file\n");
         return 1;
     }
 
-    loader = FileLoader_Init(argv[1]);
+    loader = FileLoader_Init(argv[0]);
     if(loader == NULL) {
         fprintf(stderr,"failed to create FileLoader\n");
         return 1;
@@ -195,7 +234,7 @@ int main(int argc, const char *argv[]) {
 
     dump_info(&wrapper);
 
-    totalSamples = wrapper.Tick2Sample(wrapper.player,wrapper.GetTotalPlayTicks(wrapper.player,2));
+    totalSamples = wrapper.Tick2Sample(wrapper.player,wrapper.GetTotalPlayTicks(wrapper.player,loops));
 
     /* only apply fade if there's a looping section */
     if(wrapper.GetLoopTicks(wrapper.player)) {

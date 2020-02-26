@@ -1,6 +1,8 @@
 #ifndef VGM2WAV_H
 #define VGM2WAV_H
 
+#include <string.h>
+
 #include "player/vgmplayer.h"
 #include "player/s98player.h"
 #include "player/droplayer.h"
@@ -18,6 +20,9 @@
 #define SAMPLE_RATE 44100
 #define BUFFER_LEN 4096
 #define FADE_LEN 8
+
+#define str_equals(s1,s2) (strcmp(s1,s2) == 0)
+#define str_istarts(s1,s2) (strncasecmp(s1,s2,strlen(s2)) == 0)
 
 #define WRAPPER_INIT_FUNC(FUNC,TYPE) \
   wrapper.FUNC = (PASTE(FUNC,Func)) &UNDERSCORE(TYPE,FUNC);
@@ -251,6 +256,19 @@ static void fade_samples(unsigned int samples_rem, unsigned int samples_fade, un
         i++;
     }
     return;
+}
+
+static unsigned int scan_uint(const char *str) {
+    const char *s = str;
+    unsigned int num = 0;
+    while(*s) {
+        if(*s < 48 || *s > 57) break;
+        num *= 10;
+        num += (*s - 48);
+        s++;
+    }
+
+    return num;
 }
 
 
