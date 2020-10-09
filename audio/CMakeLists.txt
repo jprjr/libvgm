@@ -152,7 +152,7 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC $<BUILD_INTERFACE:${LIBVGM_SOURCE_DIR}> $<INSTALL_INTERFACE:${LIBVGM_INSTALL_INCLUDE_DIR}>
 	PRIVATE ${AUDIO_INCLUDES}
 )
-target_link_libraries(${PROJECT_NAME} PRIVATE ${AUDIO_LIBS} vgm-utils)
+target_link_libraries(${PROJECT_NAME} PUBLIC ${AUDIO_LIBS} vgm-utils)
 
 if(WIN32)
 	# for some Windows Audio APIs, we need WinAPI headers from special directories

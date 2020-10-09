@@ -590,7 +590,7 @@ target_include_directories(${PROJECT_NAME}
 
 if(CMAKE_COMPILER_IS_GNUCC OR UNIX)
 	# link Math library
-	target_link_libraries(${PROJECT_NAME} PRIVATE m)
+	target_link_libraries(${PROJECT_NAME} PUBLIC m)
 	set(EMU_PC_LDFLAGS "-lm")
 endif()
 
